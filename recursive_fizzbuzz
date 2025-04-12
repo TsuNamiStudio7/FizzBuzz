@@ -1,0 +1,30 @@
+from typing import Callable, Dict, List
+
+# Define dynamic rule set using lambdas
+RULES: Dict[str, Callable[[int], str]] = {
+    "Fizz": lambda n: "Fizz" if n % 3 == 0 else "",
+    "Buzz": lambda n: "Buzz" if n % 5 == 0 else "",
+    "Pop":  lambda n: "Pop" if n % 4 == 0 else "",
+    "Bang": lambda n: "Bang" if str(n).endswith("7") else ""
+}
+
+# Recursive engine
+def recursive_fizzbuzz(start: int, end: int, rules: Dict[str, Callable[[int], str]]) -> List[str]:
+    if start == end:
+        return [apply_rules(start, rules)]
+    elif start < end:
+        return [apply_rules(start, rules)] + recursive_fizzbuzz(start + 1, end, rules)
+    else:
+        return [apply_rules(start, rules)] + recursive_fizzbuzz(start - 1, end, rules)
+
+def apply_rules(n: int, rules: Dict[str, Callable[[int], str]]) -> str:
+    result = ''.join(rule(n) for rule in rules.values())
+    return result or str(n)
+
+# Entry point
+if __name__ == "__main__":
+    START = 100
+    END = 1
+    result = recursive_fizzbuzz(START, END, RULES)
+    for line in result:
+        print(line)
